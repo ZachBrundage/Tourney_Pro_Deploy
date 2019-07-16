@@ -1,0 +1,18 @@
+body {
+    
+}
+
+button {
+    background-color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.banner-img{
+    height: 250px;
+    background-image: url(Avatars/backPic.jpg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    position: relative;
+}
