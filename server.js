@@ -33,6 +33,10 @@ app.post("/login", function(req, res){
     var password = req.body.password;
     var email = req.body.email;
     
+    console.log(username);
+    console.log(password);
+    console.log(email);
+    
     var sq = "\'";
     var sql = "INSERT INTO users (username, pass, email) values (" + sq + username + sq + ", " + sq + password + sq + ", " + sq + email + sq + ")";
     //console.log("Sending Query: " + sql);
