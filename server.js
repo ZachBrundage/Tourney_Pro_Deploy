@@ -8,8 +8,8 @@ var port = process.env.PORT || 8080;
 
 
 // Heroku DB connection 
-//var connectionString = process.env.DATABASE_URL || "postgres://vekibicpuuxhkl:36e1e13b194f3377e312588f4dd9808cdb67008c08bc55f20a8de12f816457b1@ec2-54-197-232-203.compute-1.amazonaws.com:5432/df5pn8ffgdhg87?ssl=true";
-//var pool = new Pool({connectionString: connectionString});
+var connectionString = process.env.DATABASE_URL || "postgres://sezwxagibmnild:011c15c1eda11d997cc06823796c598c6962193d626a2a96bcc65a1d4c7368cf@ec2-107-22-211-248.compute-1.amazonaws.com:5432/d9f9mroorggnn4?ssl=true";
+var pool = new Pool({connectionString: connectionString});
 
 // View Setup
 
@@ -25,6 +25,26 @@ app.get("/", function(req, res){
     console.log("SERVER UP");
     res.render("login");
 
+});
+
+app.post("/login", function(req, res){
+    
+    var username = req.body.username;
+    var password = req.body.password;
+    var email = req.body.email;
+    
+    var sq = "\'";
+    var sql = "INSERT INTO users (username, pass, email) values (" + sq + username + sq + ", " + sq + password + sq + ", " + sq + email + sq + ")";
+    //console.log("Sending Query: " + sql);
+    
+    pool.query(sql, function(err, result) {
+    // If an error occurred...
+        if (err) {
+            console.log("Error in query: ")
+            console.log(err);
+        };
+    });
+    res.render("login");
 });
 
 app.get("/myProfile", function(req, res){
