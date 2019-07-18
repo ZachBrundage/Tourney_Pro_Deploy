@@ -1,0 +1,43 @@
+<!DOCTPYE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="/docs/4.1/assets/img/favicons/favicon.ico">
+
+    <title>Tourney Pro</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.1/examples/sign-in/">
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+</head>
+<body class="text-center">
+    <form class="form-signin" action="/editProfile" method="post">
+      <h1 class="h3 mb-3 font-weight-normal">Edit Your Profile</h1>
+        
+      <label for="inputBday" class="sr-only">Birthday</label>
+      <input type="date" id="bday"  name="birthday" class="form-control" placeholder="" required="" autofocus="">
+        
+      <label for="inputPassword" class="sr-only">Bio</label>
+      <input type="text" id="bio" name="bio" class="form-control" placeholder="Bio" required="">
+      
+      <select class="form-control" id="iconSelect" name="avatar">
+          <option value="/Avatars/icons8-bear-48.png">Bear</option>
+          <option value="/Avatars/icons8-shark-48.png">Shark</option>
+          <option value="/Avatars/icons8-duck-48.png">Duck</option>
+          <option value="/Avatars/icons8-elephant-48.png">Elephant</option>
+          <option value="/Avatars/icons8-octopus-48.png">Octopus</option>
+          <option value="/Avatars/icons8-sheep-48.png">Sheep</option>
+          <option value="/Avatars/icons8-squirtle-48.png">Squirtle</option>
+          <option value="/Avatars/icons8-bullbasaur-48.png">Bulbasaur</option>
+          <option value="/Avatars/icons8-pokemon-48.png">Pikachu</option>
+     </select>
+        
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+    </form>
+</body>
+</html>

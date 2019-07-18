@@ -18,6 +18,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.set("views", "views");
 app.set("view engine", "ejs");
 
+// Globals
+var userID;
 
 // Routes
 app.get("/", function(req, res){
@@ -27,6 +29,7 @@ app.get("/", function(req, res){
 
 });
 
+// Registration
 app.post("/login", function(req, res){
     
     var username = req.body.username;
@@ -50,6 +53,50 @@ app.post("/login", function(req, res){
     });
     res.render("login");
 });
+
+// Login Verification
+app.post("/verify", function(req, res){
+    
+    var username = req.body.username;
+    var password = req.body.password;
+    
+    var sq = "\'";
+    var sql = "SELECT user_id FROM users WHERE username =" + sq + username + sq + "AND pass =" + sq + password + sq;
+    pool.query(sql, function(err, result) {
+    // If an error occurred...
+        if (err) {
+            console.log("Error in query: ")
+            console.log(err);
+            res.render("error");
+        };
+        if (result.rowCount > 0){
+            console.log(result.rowCount);
+            userID = result.rows[0].user_id;
+            // Pull Profile Info
+            var psql = "SELECT username, birthday, bio, avatar FROM users WHERE user_id =" + userID;
+            console.log(psql);
+            pool.query(psql, function(err, results){
+                if (err) {
+                    console.log("Error in query: ")
+                    console.log(err);
+                    res.render("error");
+                }
+                else {
+                    var params = {
+                        username: results.rows[0].username,
+                        birthday: results.rows[0].birthday,
+                        bio: results.rows[0].bio,
+                        avatar: results.rows[0].avatar
+                    };
+                    res.render("myProfile", params);
+                }
+            });   
+        }
+        else
+            res.render("error");
+    });
+});
+
 
 app.get("/myProfile", function(req, res){
     
@@ -77,6 +124,57 @@ app.get("/register", function(req, res){
     console.log("register");
     res.render("register");
 
+});
+
+app.get("/goEditPage", function(req, res){
+    
+    console.log("editProfile");
+    res.render("editProfile");
+
+});
+
+app.post("/editProfile", function(req, res){
+    
+    console.log("editProfile");
+    var birthday = req.body.birthday;
+    var bio = req.body.bio;
+    var avatar = req.body.avatar;
+    
+    console.log(birthday);
+    console.log(bio);
+    console.log(avatar);
+    
+    var sq = "\'";
+    var sql = "UPDATE users SET birthday =" + sq + birthday + sq + ", bio =" + sq + bio + sq + ", avatar =" + sq + avatar + sq + "WHERE user_id =" + userID;
+    console.log("Sending Query: " + sql);
+    
+    pool.query(sql, function(err, result) {
+    // If an error occurred...
+        if (err) {
+            console.log("Error in query: ")
+            console.log(err);
+        }
+        else {
+            var psql = "SELECT username, birthday, bio, avatar FROM users WHERE user_id =" + userID;
+            console.log(psql);
+            pool.query(psql, function(err, results){
+                if (err) {
+                    console.log("Error in query: ")
+                    console.log(err);
+                    res.render("error");
+                }
+                else {
+                    var params = {
+                        username: results.rows[0].username,
+                        birthday: results.rows[0].birthday,
+                        bio: results.rows[0].bio,
+                        avatar: results.rows[0].avatar
+                    };
+                    res.render("myProfile", params);
+                }
+            });
+        }
+    });
 });
 
 // Server Listening
