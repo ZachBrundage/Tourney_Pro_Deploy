@@ -88,6 +88,7 @@ app.post("/verify", function(req, res){
                         bio: results.rows[0].bio,
                         avatar: results.rows[0].avatar
                     };
+                    console.log(params);
                     res.render("myProfile", params);
                 }
             });   
@@ -97,19 +98,96 @@ app.post("/verify", function(req, res){
     });
 });
 
+app.post("/postTourney", function(req, res){
+    
+    var name = req.body.tourneyName;
+    var rules = req.body.rules;
+    var prize = req.body.prize;
+    
+    var sq = "\'";
+    var sql = "INSERT INTO tourneys (name, rules, prize, host) values (" + sq + name + sq + ", " + sq + rules + sq + ", " + sq + prize + sq + ", " + sq + userID + sq + ")";
+    //console.log("Sending Query: " + sql);
+    
+    pool.query(sql, function(err, result) {
+    // If an error occurred...
+        if (err) {
+            console.log("Error in query: ")
+            console.log(err);
+        }
+        else {
+            var psql = "SELECT * FROM tourneys WHERE host =" + userID;
+            console.log(psql);
+            pool.query(psql, function(err, results){
+                if (err) {
+                    console.log("Error in query: ")
+                    console.log(err);
+                    res.render("error");
+                }
+                else {
+                    var params = [];
+                    for (var i = 0; i < results.rowCount; i++){
+                        var obj = {
+                            name: results.rows[i].name,
+                            rules: results.rows[i].rules
+                        };
+                        params.push(obj);
+                    }
+                    console.log(params);
+                    res.render("myTourneys", {tourneys: params});
+                }
+            });
+        }
+    });
+});
 
 app.get("/myProfile", function(req, res){
     
     console.log("myProfile");
-    res.render("myProfile");
-
+    var psql = "SELECT username, birthday, bio, avatar FROM users WHERE user_id =" + userID;
+    console.log(psql);
+    pool.query(psql, function(err, results){
+        if (err) {
+            console.log("Error in query: ")
+            console.log(err);
+            res.render("error");
+        }
+        else {
+            var params = {
+                username: results.rows[0].username,
+                birthday: results.rows[0].birthday,
+                bio: results.rows[0].bio,
+                avatar: results.rows[0].avatar
+            };
+            console.log(params);
+            res.render("myProfile", params);
+        }
+    });
 });
 
 app.get("/myTourneys", function(req, res){
     
     console.log("myTourneys");
-    res.render("myTourneys");
-
+    var psql = "SELECT * FROM tourneys WHERE host =" + userID;
+    console.log(psql);
+    pool.query(psql, function(err, results){
+        if (err) {
+            console.log("Error in query: ")
+            console.log(err);
+            res.render("error");
+        }
+        else {
+            var params = [];
+            for (var i = 0; i < results.rowCount; i++){
+                var obj = {
+                    name: results.rows[i].name,
+                    rules: results.rows[i].rules
+                };
+                params.push(obj);
+            }
+            console.log(params);
+            res.render("myTourneys", {tourneys: params});
+        }
+    });
 });
 
 app.get("/createTourney", function(req, res){
@@ -173,6 +251,32 @@ app.post("/editProfile", function(req, res){
                     res.render("myProfile", params);
                 }
             });
+        }
+    });
+});
+
+app.get("/compTourneys", function(req, res){
+    
+    console.log("compTourneys");
+    var psql = "SELECT name FROM tourneys INNER JOIN participants ON tourneys.tourney_id = participants.tourney_id INNER JOIN users ON users.user_id = participants.user_id WHERE users.user_id =" + userID;
+    console.log(psql);
+    pool.query(psql, function(err, results){
+        if (err) {
+            console.log("Error in query: ")
+            console.log(err);
+            res.render("error");
+        }
+        else {
+            var params = [];
+            for (var i = 0; i < results.rowCount; i++){
+                var obj = {
+                    name: results.rows[i].name,
+                    rules: results.rows[i].rules
+                };
+                params.push(obj);
+            }
+            console.log(params);
+            res.render("compTourneys", {tourneys: params});
         }
     });
 });

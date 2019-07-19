@@ -34,32 +34,42 @@
                     <a class="nav-link" onClick="toMyProfile()">My Profile <span class="sr-only">(current)</span></a>
                     </form>
                 </li>
-                <li class="nav-item">
-                    <form action="/myTourneys" method="get" id="toMyTourneys">
-                    <a class="nav-link" onClick="toMyTourneys()">My Tourney</a>
-                    </form>
-                </li>
         
                 <li class="nav-item">
                     <form action="/createTourney" method="get" id="createTourney">
                     <a class="nav-link" onClick="createTourney()">Create A Tourney</a>
                     </form>
                 </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Tourneys
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <form action="/myTourneys" method="get" id="toMyTourneys">
+                        <a class="dropdown-item" onClick="toMyTourneys()">Hosting</a>
+                        </form>
+                        <form action="/myTourneys" method="get" id="toCompTourneys">
+                        <a class="dropdown-item" onClick="toCompTourneys()">Competing</a>
+                        </form>
+                    </div>
+                </li>
             </ul>
         </div>
         </nav>
-    <select class="form-control" id="exampleFormControlSelect1">
-      <option>Bear</option>
-      <option>Shark</option>
-      <option>Duck</option>
-      <option>Elephant</option>
-      <option>Octopus</option>
-      <option>Sheep</option>
-      <option>Squirtle</option>
-      <option>Bulbasaur</option>
-      <option>Pikachu</option>
-      <option>Mario</option>
-    </select>
+    <form class="form-signin" action="/login" method="post">
+      <h1 class="h3 mb-3 font-weight-normal" style="text-align: center">Create a Tourney</h1>
+        
+      <label for="inputName" class="sr-only">Tourney Name</label>
+      <input type="text" id="tourneyName" name="tourneyName" class="form-control" placeholder="Tourney Name">
+        
+      <label for="inputRules" class="sr-only">Input Rules</label>
+      <textarea class="form-control" name="rules" rows="3" placeholder="Rules"></textarea>
+        
+      <label for="inputPassword" class="sr-only">Input Prize</label>
+      <textarea class="form-control" name="prize" rows="3" placeholder="Prize"></textarea>
+        
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Create</button>
+    </form>
         
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>

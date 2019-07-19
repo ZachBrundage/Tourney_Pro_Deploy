@@ -19,6 +19,10 @@
                 var form = document.getElementById("createTourney");
                 form.submit()
             }
+            function toCompTourneys(){
+                var form = document.getElementById("toCompTourneys");
+                form.submit()
+            }
         </script>
     </head>
     <body style="background-color: ">
@@ -35,15 +39,22 @@
                     </form>
                 </li>
                 <li class="nav-item">
-                    <form action="/myTourneys" method="get" id="toMyTourneys">
-                    <a class="nav-link" onClick="toMyTourneys()">My Tourney</a>
-                    </form>
-                </li>
-        
-                <li class="nav-item">
                     <form action="/createTourney" method="get" id="createTourney">
                     <a class="nav-link" onClick="createTourney()">Create A Tourney</a>
                     </form>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Tourneys
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <form action="/myTourneys" method="get" id="toMyTourneys">
+                        <a class="dropdown-item" onClick="toMyTourneys()">Hosting</a>
+                        </form>
+                        <form action="/compTourneys" method="get" id="toCompTourneys">
+                        <a class="dropdown-item" onClick="toCompTourneys()">Competing</a>
+                        </form>
+                    </div>
                 </li>
             </ul>
         </div>
