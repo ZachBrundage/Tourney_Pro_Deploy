@@ -75,7 +75,8 @@
     <p class="mb-1"><%= tourney[0].prize%></p>
   </a>
         </div>
-        <form action="/goEditPage" method="get">
+        <form action="/viewParticipants" method="post">
+            <input type="hidden" name="tourneyId" value="<%= tourney[0].id%>">
             <button class="btn btn-lg btn-primary btn-block bg-dark" type="submit">Participants</button>
         </form>
         <br>

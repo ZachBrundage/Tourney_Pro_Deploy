@@ -51,11 +51,11 @@ INSERT INTO participants (user_id, tourney_id) VALUES (1, 1);
 
 -- Update Participant Query --
 UPDATE participants 
-SET rank = 1
-, wins = 1
-, losses = 0
-, status = 'Active' 
-WHERE tourney_id = 1 AND user_id = 1;
+SET rank = 3
+, wins = 0
+, losses = 2
+, status = 'Eliminated' 
+WHERE participant_id = 10;
 
 -- Matches Table --
 CREATE TABLE matches
@@ -86,6 +86,12 @@ SELECT name, rules, tourneys.tourney_id FROM tourneys
 INNER JOIN participants ON tourneys.tourney_id = participants.tourney_id
 INNER JOIN users ON users.user_id = participants.user_id
 WHERE users.user_id = 6;
+
+-- Usernames for each Participant --
+SELECT username, avatar FROM users
+INNER JOIN participants ON users.user_id = participants.user_id
+INNER JOIN tourneys ON tourneys.tourney_id = participants.tourney_id
+WHERE tourneys.tourney_id = 2;
 
 
 

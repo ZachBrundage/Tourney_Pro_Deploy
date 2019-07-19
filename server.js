@@ -20,6 +20,7 @@ app.set("view engine", "ejs");
 
 // Globals
 var userID;
+var tourneyID;
 
 // Routes
 app.get("/", function(req, res){
@@ -287,6 +288,7 @@ app.post("/viewTourney", function(req, res){
     
     console.log("viewTourney");
     var tourneyId = req.body.tourneyId;
+    tourneyID = tourneyId;
     console.log(tourneyId);
     
     var psql = "SELECT * FROM tourneys WHERE tourney_id =" + tourneyId;
@@ -312,6 +314,128 @@ app.post("/viewTourney", function(req, res){
             res.render("viewTourney", {tourney: params});
         }
     });
+});
+
+app.post("/viewParticipants", function(req, res){
+    
+    console.log("viewParticipants");
+    var tourneyId = req.body.tourneyId;
+    var psql = "SELECT username, avatar FROM users INNER JOIN participants ON users.user_id = participants.user_id INNER JOIN tourneys ON tourneys.tourney_id = participants.tourney_id WHERE tourneys.tourney_id =" + tourneyId;
+    console.log(psql);
+    pool.query(psql, function(err, results){
+        if (err) {
+            console.log("Error in query: ")
+            console.log(err);
+            res.render("error");
+        }
+        else {
+            var sql = "SELECT * FROM participants WHERE tourney_id =" + tourneyId;
+            pool.query(sql, function(err, participants){
+                if (err) {
+                    console.log("Error in query: ")
+                    console.log(err);
+                    res.render("error");
+                }
+                else {
+                    var params = [];
+                    for (var i = 0; i < results.rowCount; i++){
+                        var obj = {
+                            name: results.rows[i].username,
+                            icon: results.rows[i].avatar,
+                            rank: participants.rows[i].rank,
+                            wins: participants.rows[i].wins,
+                            losses: participants.rows[i].losses,
+                            status: participants.rows[i].status,
+                            id: participants.rows[i].participant_id,
+                            tourney: tourneyId 
+                        };
+                        params.push(obj);
+                    }
+                    console.log(params);
+                    res.render("viewParticipants", {people: params});
+                }
+            });  
+        }
+    });
+});
+
+app.post("/editParticipant", function(req, res){
+    
+    console.log("editParticipants");
+    var rank = req.body.rank;
+    var wins = req.body.wins;
+    var losses = req.body.losses;
+    var status = req.body.status;
+    var partId = req.body.partId;
+    var tourneyId = req.body.tourneyId;
+    
+    var sq = "\'";
+    var sql = "UPDATE participants SET rank = " + rank + ", wins = " + wins + ", losses = " + losses + ", status = " + sq + status + sq + "WHERE participant_id = " + partId;
+    console.log("Sending Query: " + sql);
+    
+    pool.query(sql, function(err, result) {
+    // If an error occurred...
+        if (err) {
+            console.log("Error in query: ")
+            console.log(err);
+        }
+        else {
+            console.log("viewParticipants");
+            var psql = "SELECT username, avatar FROM users INNER JOIN participants ON users.user_id = participants.user_id INNER JOIN tourneys ON tourneys.tourney_id = participants.tourney_id WHERE tourneys.tourney_id = " + tourneyID;
+            console.log(psql);
+            pool.query(psql, function(err, results){
+                if (err) {
+                    console.log("Error in query: ")
+                    console.log(err);
+                    res.render("error");
+                }
+                else {
+                    var sql = "SELECT * FROM participants WHERE tourney_id =" + tourneyID;
+                    pool.query(sql, function(err, participants){
+                        if (err) {
+                            console.log("Error in query: ")
+                            console.log(err);
+                            res.render("error");
+                        }
+                        else {
+                            var params = [];
+                            for (var i = 0; i < results.rowCount; i++){
+                                var obj = {
+                                    name: results.rows[i].username,
+                                    icon: results.rows[i].avatar,
+                                    rank: participants.rows[i].rank,
+                                    wins: participants.rows[i].wins,
+                                    losses: participants.rows[i].losses,
+                                    status: participants.rows[i].status,
+                                    id: participants.rows[i].participant_id
+                                };
+                                params.push(obj);
+                            }
+                            console.log(params);
+                            res.render("viewParticipants", {people: params});
+                        }
+                    });  
+                }
+            });
+        }
+    });
+});
+
+app.post("/toEditParticipants", function(req, res){
+    
+    console.log("toEditParticipants");
+    var tourneyId = req.body.tourneyId;
+    var partId = req.body.partId;
+    
+    var params = [];
+    
+    var obj = {
+        tourneyId: tourneyId,
+        partId: partId
+    };
+    params.push(obj);
+    console.log(params);
+    res.render("editParticipant", {tourney: params});
 });
 
 // Server Listening
