@@ -61,12 +61,16 @@
         </nav>
         
             <% for(let i = 0; i < tourneys.length; i++) { %>
-                <div class="list-group-item list-group-item-action flex-column align-items-start">
-                    <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1"><%= tourneys[i].name%></h5>
+                <form action="/viewTourney" method="post">
+                    <div class="list-group-item list-group-item-action flex-column align-items-start">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1"><%= tourneys[i].name%></h5>
+                        </div>
+                        <p class="mb-1"><%= tourneys[i].rules%></p>
+                        <input type="hidden" name="tourneyId" value="<%= tourneys[i].id%>">
+                        <button type="submit" class="btn btn-primary  btn-block bg-dark">View</button>
                     </div>
-                    <p class="mb-1"><%= tourneys[i].rules%></p>
-                </div>
+                </form>
             <% } %>
         
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

@@ -19,6 +19,10 @@
                 var form = document.getElementById("createTourney");
                 form.submit()
             }
+            function toCompTourneys(){
+                var form = document.getElementById("toCompTourneys");
+                form.submit()
+            }
         </script>
     </head>
     <body style="background-color: ">
@@ -34,7 +38,6 @@
                     <a class="nav-link" onClick="toMyProfile()">My Profile <span class="sr-only">(current)</span></a>
                     </form>
                 </li>
-        
                 <li class="nav-item">
                     <form action="/createTourney" method="get" id="createTourney">
                     <a class="nav-link" onClick="createTourney()">Create A Tourney</a>
@@ -48,7 +51,7 @@
                         <form action="/myTourneys" method="get" id="toMyTourneys">
                         <a class="dropdown-item" onClick="toMyTourneys()">Hosting</a>
                         </form>
-                        <form action="/myTourneys" method="get" id="toCompTourneys">
+                        <form action="/compTourneys" method="get" id="toCompTourneys">
                         <a class="dropdown-item" onClick="toCompTourneys()">Competing</a>
                         </form>
                     </div>
@@ -56,21 +59,29 @@
             </ul>
         </div>
         </nav>
-    <form class="form-signin" action="/login" method="post">
-      <h1 class="h3 mb-3 font-weight-normal" style="text-align: center">Create a Tourney</h1>
+    <h1 style="text-align: center">Tourney Name</h1>
         
-      <label for="inputName" class="sr-only">Tourney Name</label>
-      <input type="text" id="tourneyName" name="tourneyName" class="form-control" placeholder="Tourney Name">
-        
-      <label for="inputRules" class="sr-only">Input Rules</label>
-      <textarea class="form-control" name="rules" rows="3" placeholder="Rules"></textarea>
-        
-      <label for="inputPassword" class="sr-only">Input Prize</label>
-      <textarea class="form-control" name="prize" rows="3" placeholder="Prize"></textarea>
-        
-      <button class="btn btn-lg btn-primary btn-block" type="submit">Create</button>
-    </form>
-        
+    <div class="list-group">
+  <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+    <div class="d-flex w-100 justify-content-between">
+      <h5 class="mb-1">Rules</h5>
+    </div>
+    <p class="mb-1">...</p>
+  </a>
+  <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+    <div class="d-flex w-100 justify-content-between">
+      <h5 class="mb-1">Prize</h5>
+    </div>
+    <p class="mb-1">...</p>
+  </a>
+        </div>
+        <form action="/goEditPage" method="get">
+            <button class="btn btn-lg btn-primary btn-block bg-dark" type="submit">Participants</button>
+        </form>
+        <br>
+        <form action="/goEditPage" method="get">
+            <button class="btn btn-lg btn-primary btn-block bg-dark" type="submit">Matches</button>
+        </form>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>

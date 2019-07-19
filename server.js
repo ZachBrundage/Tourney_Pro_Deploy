@@ -180,11 +180,12 @@ app.get("/myTourneys", function(req, res){
             for (var i = 0; i < results.rowCount; i++){
                 var obj = {
                     name: results.rows[i].name,
-                    rules: results.rows[i].rules
+                    rules: results.rows[i].rules,
+                    id: results.rows[i].tourney_id
                 };
                 params.push(obj);
             }
-            console.log(params);
+            console.log(params[0].id);
             res.render("myTourneys", {tourneys: params});
         }
     });
@@ -258,7 +259,7 @@ app.post("/editProfile", function(req, res){
 app.get("/compTourneys", function(req, res){
     
     console.log("compTourneys");
-    var psql = "SELECT name FROM tourneys INNER JOIN participants ON tourneys.tourney_id = participants.tourney_id INNER JOIN users ON users.user_id = participants.user_id WHERE users.user_id =" + userID;
+    var psql = "SELECT name, rules, tourneys.tourney_id FROM tourneys INNER JOIN participants ON tourneys.tourney_id = participants.tourney_id INNER JOIN users ON users.user_id = participants.user_id WHERE users.user_id =" + userID;
     console.log(psql);
     pool.query(psql, function(err, results){
         if (err) {
@@ -271,12 +272,44 @@ app.get("/compTourneys", function(req, res){
             for (var i = 0; i < results.rowCount; i++){
                 var obj = {
                     name: results.rows[i].name,
-                    rules: results.rows[i].rules
+                    rules: results.rows[i].rules,
+                    id: results.rows[i].tourney_id
                 };
                 params.push(obj);
             }
             console.log(params);
             res.render("compTourneys", {tourneys: params});
+        }
+    });
+});
+
+app.post("/viewTourney", function(req, res){
+    
+    console.log("viewTourney");
+    var tourneyId = req.body.tourneyId;
+    console.log(tourneyId);
+    
+    var psql = "SELECT * FROM tourneys WHERE tourney_id =" + tourneyId;
+    console.log(psql);
+    pool.query(psql, function(err, results){
+        if (err) {
+            console.log("Error in query: ")
+            console.log(err);
+            res.render("error");
+        }
+        else {
+            var params = [];
+            for (var i = 0; i < results.rowCount; i++){
+                var obj = {
+                    name: results.rows[i].name,
+                    rules: results.rows[i].rules,
+                    prize: results.rows[i].prize,
+                    id: results.rows[i].tourney_id
+                };
+                params.push(obj);
+            }
+            console.log(params);
+            res.render("viewTourney", {tourney: params});
         }
     });
 });

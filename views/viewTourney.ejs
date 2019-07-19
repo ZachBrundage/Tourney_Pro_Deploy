@@ -25,7 +25,7 @@
             }
         </script>
     </head>
-    <body>
+    <body style="background-color: ">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand" href="#">TOURNEY PRO</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -59,20 +59,29 @@
             </ul>
         </div>
         </nav>
+    <h1 style="text-align: center"><%= tourney[0].name%></h1>
         
-            <% for(let i = 0; i < tourneys.length; i++) { %>
-                <form action="/viewTourney" method="post">
-                    <div class="list-group-item list-group-item-action flex-column align-items-start">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1"><%= tourneys[i].name%></h5>
-                        </div>
-                        <p class="mb-1"><%= tourneys[i].rules%></p>
-                        <input type="hidden" name="tourneyId" value="<%= tourneys[i].id%>">
-                        <button type="submit" class="btn btn-primary  btn-block bg-dark">View</button>
-                    </div>
-                </form>
-            <% } %>
-        
+    <div class="list-group">
+  <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+    <div class="d-flex w-100 justify-content-between">
+      <h5 class="mb-1">Rules</h5>
+    </div>
+    <p class="mb-1"><%= tourney[0].rules%></p>
+  </a>
+  <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+    <div class="d-flex w-100 justify-content-between">
+      <h5 class="mb-1">Prize</h5>
+    </div>
+    <p class="mb-1"><%= tourney[0].prize%></p>
+  </a>
+        </div>
+        <form action="/goEditPage" method="get">
+            <button class="btn btn-lg btn-primary btn-block bg-dark" type="submit">Participants</button>
+        </form>
+        <br>
+        <form action="/goEditPage" method="get">
+            <button class="btn btn-lg btn-primary btn-block bg-dark" type="submit">Matches</button>
+        </form>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>

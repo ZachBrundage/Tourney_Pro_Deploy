@@ -82,7 +82,7 @@ SET winner = 1
 WHERE match_id = 1;
 
 -- Tournaments User Participates In --
-SELECT name FROM tourneys
+SELECT name, rules, tourneys.tourney_id FROM tourneys
 INNER JOIN participants ON tourneys.tourney_id = participants.tourney_id
 INNER JOIN users ON users.user_id = participants.user_id
 WHERE users.user_id = 6;
