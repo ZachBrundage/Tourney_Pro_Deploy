@@ -3,9 +3,14 @@ var {Pool} = require('pg');
 var app = express();
 var bodyParser = require("body-parser");
 var nodemailer = require('nodemailer');
+var bcrypt = require('bcrypt');
 
 // Server Port
 var port = process.env.PORT || 8080;
+
+// bcrypt setup
+var saltRounds = 10;
+
 
 // Nodemailer Auth
 var transporter = nodemailer.createTransport({
@@ -46,10 +51,6 @@ app.post("/login", function(req, res){
     var password = req.body.password;
     var email = req.body.email;
     
-    console.log(username);
-    console.log(password);
-    console.log(email);
-    
     var sq = "\'";
     var sql = "INSERT INTO users (username, pass, email) values (" + sq + username + sq + ", " + sq + password + sq + ", " + sq + email + sq + ")";
     //console.log("Sending Query: " + sql);
@@ -69,7 +70,6 @@ app.post("/verify", function(req, res){
     
     var username = req.body.username;
     var password = req.body.password;
-    
     var sq = "\'";
     var sql = "SELECT user_id FROM users WHERE username =" + sq + username + sq + "AND pass =" + sq + password + sq;
     pool.query(sql, function(err, result) {

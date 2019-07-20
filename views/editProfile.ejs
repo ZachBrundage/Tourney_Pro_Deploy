@@ -34,6 +34,10 @@
                 var form = document.getElementById("toJoinTourney");
                 form.submit()
             }
+            function logout(){
+                var form = document.getElementById("logout");
+                form.submit()
+            }
         </script>
 </head>
 <body class="text-center">
@@ -71,6 +75,11 @@
                         <a class="dropdown-item" onClick="toCompTourneys()">Competing</a>
                         </form>
                     </div>
+                </li>
+                <li class="nav-item">
+                    <form action="/" method="get" id="logout">
+                    <a class="nav-link" onClick="logout()">Logout</a>
+                    </form>
                 </li>
             </ul>
         </div>
