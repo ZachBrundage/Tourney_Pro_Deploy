@@ -23,6 +23,10 @@
                 var form = document.getElementById("toCompTourneys");
                 form.submit()
             }
+            function toJoinTourney(){
+                var form = document.getElementById("toJoinTourney");
+                form.submit()
+            }
         </script>
     </head>
     <body>
@@ -43,6 +47,11 @@
                     <a class="nav-link" onClick="createTourney()">Create A Tourney</a>
                     </form>
                 </li>
+                <li class="nav-item">
+                    <form action="/toJoinTourney" method="get" id="toJoinTourney">
+                    <a class="nav-link" onClick="toJoinTourney()">Join A Tourney</a>
+                    </form>
+                </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Tourneys
@@ -61,7 +70,7 @@
         </nav>
         
             <% for(let i = 0; i < matches.length; i++) { %>
-                <form action="/" method="post">
+                <form action="/toEditMatch" method="post">
                         <div class="list-group-item list-group-item-action flex-column align-items-start">
                         <div class="d-flex w-100">
                             <img src="<%= matches[i].compOneIcon%>">
@@ -77,7 +86,7 @@
                         <div class="d-flex w-100">
                             <p class="mb-1">Loser: <%= matches[i].loser%></p>
                         </div>
-        
+                        <input type="hidden" name="matchId" value="<%= matches[i].id%>">
                         <button type="submit" class="btn btn-primary  btn-block bg-dark">Edit</button>
                     </div>
                 </form>

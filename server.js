@@ -2,10 +2,19 @@ var express = require("express");
 var {Pool} = require('pg');
 var app = express();
 var bodyParser = require("body-parser");
+var nodemailer = require('nodemailer');
 
 // Server Port
 var port = process.env.PORT || 8080;
 
+// Nodemailer Auth
+var transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'tourneypro612@gmail.com',
+    pass: 'Zacharyb1'
+  }
+});
 
 // Heroku DB connection 
 var connectionString = process.env.DATABASE_URL || "postgres://sezwxagibmnild:011c15c1eda11d997cc06823796c598c6962193d626a2a96bcc65a1d4c7368cf@ec2-107-22-211-248.compute-1.amazonaws.com:5432/d9f9mroorggnn4?ssl=true";
@@ -206,6 +215,13 @@ app.get("/register", function(req, res){
 
 });
 
+app.get("/toAddMatch", function(req, res){
+    
+    console.log("toAddMatch");
+    res.render("addMatch");
+
+});
+
 app.get("/goEditPage", function(req, res){
     
     console.log("editProfile");
@@ -320,7 +336,7 @@ app.post("/viewParticipants", function(req, res){
     
     console.log("viewParticipants");
     var tourneyId = req.body.tourneyId;
-    var psql = "SELECT username, avatar FROM users INNER JOIN participants ON users.user_id = participants.user_id INNER JOIN tourneys ON tourneys.tourney_id = participants.tourney_id WHERE tourneys.tourney_id =" + tourneyId;
+    var psql = "SELECT username, avatar, users.user_id FROM users INNER JOIN participants ON users.user_id = participants.user_id INNER JOIN tourneys ON tourneys.tourney_id = participants.tourney_id WHERE tourneys.tourney_id =" + tourneyId;
     console.log(psql);
     pool.query(psql, function(err, results){
         if (err) {
@@ -342,6 +358,7 @@ app.post("/viewParticipants", function(req, res){
                         var obj = {
                             name: results.rows[i].username,
                             icon: results.rows[i].avatar,
+                            userId: results.rows[i].user_id,
                             rank: participants.rows[i].rank,
                             wins: participants.rows[i].wins,
                             losses: participants.rows[i].losses,
@@ -381,7 +398,7 @@ app.post("/editParticipant", function(req, res){
         }
         else {
             console.log("viewParticipants");
-            var psql = "SELECT username, avatar FROM users INNER JOIN participants ON users.user_id = participants.user_id INNER JOIN tourneys ON tourneys.tourney_id = participants.tourney_id WHERE tourneys.tourney_id = " + tourneyID;
+            var psql = "SELECT username, avatar, users.user_id FROM users INNER JOIN participants ON users.user_id = participants.user_id INNER JOIN tourneys ON tourneys.tourney_id = participants.tourney_id WHERE tourneys.tourney_id = " + tourneyID;
             console.log(psql);
             pool.query(psql, function(err, results){
                 if (err) {
@@ -403,6 +420,7 @@ app.post("/editParticipant", function(req, res){
                                 var obj = {
                                     name: results.rows[i].username,
                                     icon: results.rows[i].avatar,
+                                    userId: results.rows[i].user_id,
                                     rank: participants.rows[i].rank,
                                     wins: participants.rows[i].wins,
                                     losses: participants.rows[i].losses,
@@ -450,7 +468,7 @@ app.get("/viewMatches", function(req, res){
             res.render("error");
         }
         else {
-            var sql = "SELECT * FROM matches WHERE tourney_id = " + tourneyID;
+            var sql = "SELECT * FROM matches WHERE tourney_id = " + tourneyID + " ORDER BY match_id ASC";
             pool.query(sql, function(err, matches){
                 if (err) {
                     console.log("Error in query: ")
@@ -461,14 +479,16 @@ app.get("/viewMatches", function(req, res){
                     var params = [];
                     var userCount = 0;
                     for (var i = 0; i < matches.rowCount; i++){
+                        console.log(matches.rows[i].match_id);
                         var obj = {
                           compOne: users.rows[userCount].username,
                           compOneIcon: users.rows[userCount].avatar,
                           compTwo: users.rows[++userCount].username,
                           compTwoIcon: users.rows[userCount].avatar,
                           schedule: matches.rows[i].match_schedule,
-                          winner: matches.rows[1].winner,
-                          loser: matches.rows[1].loser
+                          winner: matches.rows[i].winner,
+                          loser: matches.rows[i].loser,
+                          id: matches.rows[i].match_id
                         };
                         userCount++;
                         params.push(obj);
@@ -480,6 +500,285 @@ app.get("/viewMatches", function(req, res){
         }
     });
 });
+
+app.post("/toEditMatch", function(req, res){
+    
+    console.log("toEditMatch");
+    var matchId = req.body.matchId;
+    
+    var params = [];
+    
+    var obj = {
+        matchId: matchId
+    };
+    params.push(obj);
+    console.log(params);
+    res.render("editMatch", {match: params});
+});
+
+app.post("/editMatch", function(req, res){
+    console.log("editMatch");
+    
+    var schedule = req.body.schedule;
+    var winner = req.body.winner;
+    var loser = req.body.loser;
+    var matchId = req.body.matchId;
+    
+    var sq = "\'";
+    var sql = "UPDATE matches SET match_schedule = " + sq + schedule + sq + ", winner = " + sq + winner + sq + ", loser = " + sq + loser + sq +" WHERE match_id = " + matchId;
+    console.log("Sending Query: " + sql);
+    
+    pool.query(sql, function(err, results){
+        if (err) {
+            console.log("Error in query: ")
+            console.log(err);
+            res.render("error");
+        }
+        else {
+            var psql = "SELECT username, avatar, match_id FROM users INNER JOIN matches ON users.user_id = matches.comp_one OR users.user_id = matches.comp_two INNER JOIN tourneys ON tourneys.tourney_id = matches.tourney_id WHERE tourneys.tourney_id = " + tourneyID + "ORDER BY matches.match_id ASC";
+            console.log(psql);
+            pool.query(psql, function(err, users){
+                if (err) {
+                    console.log("Error in query: ")
+                    console.log(err);
+                    res.render("error");
+                }
+                else {
+                    var ppsql = "SELECT * FROM matches WHERE tourney_id = " + tourneyID + " ORDER BY match_id ASC";
+                    pool.query(ppsql, function(err, matches){
+                        if (err) {
+                            console.log("Error in query: ")
+                            console.log(err);
+                            res.render("error");
+                        }
+                        else {
+                            var params = [];
+                            var userCount = 0;
+                            for (var i = 0; i < matches.rowCount; i++){
+                                var obj = {
+                                    compOne: users.rows[userCount].username,
+                                    compOneIcon: users.rows[userCount].avatar,
+                                    compTwo: users.rows[++userCount].username,
+                                    compTwoIcon: users.rows[userCount].avatar,
+                                    schedule: matches.rows[i].match_schedule,
+                                    winner: matches.rows[i].winner,
+                                    loser: matches.rows[i].loser,
+                                    id: matches.rows[i].match_id
+                                };
+                                userCount++;
+                                params.push(obj);
+                            }
+                            console.log(params);
+                            res.render("viewMatches", {matches: params});
+                        }
+                    });
+                }
+            });
+        }
+    });
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+});
+
+app.post("/addMatch", function(req, res){
+    
+    console.log("addMatch");
+    var compOne = req.body.compOne;
+    var compTwo = req.body.compTwo;
+    
+    var sq = "\'";
+    var sql = "INSERT INTO matches (tourney_id, comp_one, comp_two) values (" + tourneyID + ", " + compOne + ", " + compTwo + ")";
+    console.log("Sending Query: " + sql);
+    
+    pool.query(sql, function(err, result) {
+    // If an error occurred...
+        if (err) {
+            console.log("Error in query: ")
+            console.log(err);
+        }
+        else{
+            var psql = "SELECT username, avatar, match_id FROM users INNER JOIN matches ON users.user_id = matches.comp_one OR users.user_id = matches.comp_two INNER JOIN tourneys ON tourneys.tourney_id = matches.tourney_id WHERE tourneys.tourney_id = " + tourneyID + "ORDER BY matches.match_id ASC";
+            console.log(psql);
+            pool.query(psql, function(err, users){
+                if (err) {
+                    console.log("Error in query: ")
+                    console.log(err);
+                    res.render("error");
+                }
+                else {
+                    var sql = "SELECT * FROM matches WHERE tourney_id = " + tourneyID + " ORDER BY match_id ASC";
+                    pool.query(sql, function(err, matches){
+                        if (err) {
+                            console.log("Error in query: ")
+                            console.log(err);
+                            res.render("error");
+                        }
+                        else {
+                            var params = [];
+                            var userCount = 0;
+                            for (var i = 0; i < matches.rowCount; i++){
+                                console.log(matches.rows[i].match_id);
+                                var obj = {
+                                  compOne: users.rows[userCount].username,
+                                  compOneIcon: users.rows[userCount].avatar,
+                                  compTwo: users.rows[++userCount].username,
+                                  compTwoIcon: users.rows[userCount].avatar,
+                                  schedule: matches.rows[i].match_schedule,
+                                  winner: matches.rows[i].winner,
+                                  loser: matches.rows[i].loser,
+                                  id: matches.rows[i].match_id
+                                };
+                                userCount++;
+                                params.push(obj);
+                            }
+                            console.log(params);
+                            res.render("viewMatches", {matches: params});
+                        }
+                    });
+                }
+            });
+        }
+    });
+});
+
+app.get("/toSendInvite", function(req, res){
+    
+    console.log("toSendInvite");
+    res.render("invite");
+
+});
+
+app.post("/sendInvite", function(req, res){
+    
+    console.log("sendInvite");
+    var email = req.body.email;
+    
+    var mailOptions = {
+        from: 'tourneypro612@gmail.com',
+        to: email,
+        subject: 'Tourney Pro Invite',
+        text: 'You have been invited to participate in a tournament hosted on Tourney Pro!  To join, login in to your Tourney Pro account on our App, select JOIN TOURNEY and enter code:' + tourneyID
+    };
+    
+    transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+            console.log(error);
+        } else {
+            console.log('Email sent: ' + info.response);
+        }
+    });
+    
+    var psql = "SELECT * FROM tourneys WHERE tourney_id =" + tourneyID;
+    console.log(psql);
+    pool.query(psql, function(err, results){
+        if (err) {
+            console.log("Error in query: ")
+            console.log(err);
+            res.render("error");
+        }
+        else {
+            var params = [];
+            for (var i = 0; i < results.rowCount; i++){
+                var obj = {
+                    name: results.rows[i].name,
+                    rules: results.rows[i].rules,
+                    prize: results.rows[i].prize,
+                    id: results.rows[i].tourney_id
+                };
+                params.push(obj);
+            }
+            console.log(params);
+            res.render("viewTourney", {tourney: params});
+        }
+    });
+});
+
+app.get("/toJoinTourney", function(req, res){
+    
+    console.log("toJoinTourney");
+    res.render("joinTourney");
+
+});
+
+app.post("/joinTourney", function(req, res){
+    
+    console.log("joinTourney");
+    var tourneyId = req.body.tourneyId;
+    
+    var sql = "INSERT INTO participants (user_id, tourney_id) values (" + userID + ", " + tourneyId + ")";
+    console.log("Sending Query: " + sql);
+    
+    pool.query(sql, function(err, result) {
+    // If an error occurred...
+        if (err) {
+            console.log("Error in query: ")
+            console.log(err);
+        }
+        else{
+            console.log("compTourneys");
+            var psql = "SELECT name, rules, tourneys.tourney_id FROM tourneys INNER JOIN participants ON tourneys.tourney_id = participants.tourney_id INNER JOIN users ON users.user_id = participants.user_id WHERE users.user_id =" + userID;
+            console.log(psql);
+            pool.query(psql, function(err, results){
+                if (err) {
+                    console.log("Error in query: ")
+                    console.log(err);
+                    res.render("error");
+                }
+                else {
+                    var params = [];
+                    for (var i = 0; i < results.rowCount; i++){
+                        var obj = {
+                            name: results.rows[i].name,
+                            rules: results.rows[i].rules,
+                            id: results.rows[i].tourney_id
+                        };
+                        params.push(obj);
+                    }
+                    console.log(params);
+                    res.render("compTourneys", {tourneys: params});
+                }
+            });
+        }
+    });   
+});
+
 
 // Server Listening
 app.listen(port, function() {

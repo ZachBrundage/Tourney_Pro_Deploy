@@ -77,8 +77,8 @@ VALUES (2, 8, 6, 'TODAY, ONLINE');
 
 -- Update Match Query --
 UPDATE matches
-SET winner = 1
-, loser = 6
+SET winner = 'SharkDad'
+, loser = 'ZachB'
 WHERE match_id = 1;
 
 -- Tournaments User Participates In --
@@ -103,6 +103,11 @@ ORDER BY matches.match_id ASC;
 
 -- Match Details --
 SELECT * FROM matches WHERE tourney_id = 2;
+
+-- Alter Match Table --
+ALTER TABLE matches
+ALTER COLUMN winner TYPE varchar(80),
+ALTER COLUMN loser TYPE varchar(80);
 
 
 

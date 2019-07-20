@@ -1,12 +1,19 @@
-<!DOCTYPE html>
+<!DOCTPYE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <title>Tourney Pro Login</title>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-        <link rel="stylesheet" href="style.css">
-        <script>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="/docs/4.1/assets/img/favicons/favicon.ico">
+
+    <title>Tourney Pro</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.1/examples/sign-in/">
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script>
             function toMyProfile(){
                 var form = document.getElementById("toMyProfile");
                 form.submit()
@@ -23,10 +30,14 @@
                 var form = document.getElementById("toCompTourneys");
                 form.submit()
             }
+            function toJoinTourney(){
+                var form = document.getElementById("toJoinTourney");
+                form.submit()
+            }
         </script>
-    </head>
-    <body style="background-color: ">
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+</head>
+<body class="text-center">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand" href="#">TOURNEY PRO</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -41,6 +52,11 @@
                 <li class="nav-item">
                     <form action="/createTourney" method="get" id="createTourney">
                     <a class="nav-link" onClick="createTourney()">Create A Tourney</a>
+                    </form>
+                </li>
+                <li class="nav-item">
+                    <form action="/toJoinTourney" method="get" id="toJoinTourney">
+                    <a class="nav-link" onClick="toJoinTourney()">Join A Tourney</a>
                     </form>
                 </li>
                 <li class="nav-item dropdown">
@@ -59,18 +75,14 @@
             </ul>
         </div>
         </nav>
-        
-    <form class="form-signin" action="/joinTourney" method="post">
-      <h1 class="h3 mb-3 font-weight-normal">Join Tourney</h1>
-      Enter Tourney Id
-      <input type="number" name="tourneyId" class="form-control" placeholder=""><br>
-      
-      <button class="btn btn-lg btn-primary btn-block bg-dark" type="submit">Send</button>
+    
+    <form class="form-signin" action="/editMatch" method="post">
+      <h1 class="h3 mb-3 font-weight-normal">Edit Match</h1>
+      <input type="text" name="schedule" class="form-control" placeholder="Schedule"><br>
+      <input type="text" name="winner" class="form-control" placeholder="Winner"><br>
+      <input type="text" name="loser" class="form-control" placeholder="Loser"><br>
+      <input type="hidden" name="matchId" value="<%= match[0].matchId%>">
+      <button class="btn btn-lg btn-primary btn-block bg-dark" type="submit">Edit</button>
     </form>
-    <div>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    </div>
-    </body>
+</body>
 </html>

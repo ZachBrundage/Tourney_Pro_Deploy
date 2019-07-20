@@ -23,6 +23,10 @@
                 var form = document.getElementById("toCompTourneys");
                 form.submit()
             }
+            function toJoinTourney(){
+                var form = document.getElementById("toJoinTourney");
+                form.submit()
+            }
         </script>
     </head>
     <body style="background-color: ">
@@ -43,6 +47,11 @@
                     <a class="nav-link" onClick="createTourney()">Create A Tourney</a>
                     </form>
                 </li>
+                <li class="nav-item">
+                    <form action="/toJoinTourney" method="get" id="toJoinTourney">
+                    <a class="nav-link" onClick="toJoinTourney()">Join A Tourney</a>
+                    </form>
+                </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Tourneys
@@ -60,12 +69,13 @@
         </div>
         </nav>
         
-    <form class="form-signin" action="/joinTourney" method="post">
-      <h1 class="h3 mb-3 font-weight-normal">Join Tourney</h1>
-      Enter Tourney Id
-      <input type="number" name="tourneyId" class="form-control" placeholder=""><br>
-      
-      <button class="btn btn-lg btn-primary btn-block bg-dark" type="submit">Send</button>
+    <form class="form-signin" action="/addMatch" method="post">
+      <h1 class="h3 mb-3 font-weight-normal">Add Match</h1>
+      Player 1 id
+      <input type="number" name="compOne" class="form-control" placeholder=""><br>
+      Player 2 id
+      <input type="number" name="compTwo" class="form-control" placeholder=""><br>
+      <button class="btn btn-lg btn-primary btn-block bg-dark" type="submit">Create</button>
     </form>
     <div>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

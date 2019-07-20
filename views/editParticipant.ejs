@@ -30,6 +30,10 @@
                 var form = document.getElementById("toCompTourneys");
                 form.submit()
             }
+            function toJoinTourney(){
+                var form = document.getElementById("toJoinTourney");
+                form.submit()
+            }
         </script>
 </head>
 <body class="text-center">
@@ -50,6 +54,11 @@
                     <a class="nav-link" onClick="createTourney()">Create A Tourney</a>
                     </form>
                 </li>
+                <li class="nav-item">
+                    <form action="/toJoinTourney" method="get" id="toJoinTourney">
+                    <a class="nav-link" onClick="toJoinTourney()">Join A Tourney</a>
+                    </form>
+                </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Tourneys
@@ -65,7 +74,7 @@
                 </li>
             </ul>
         </div>
-</nav>
+        </nav>
     
     <form class="form-signin" action="/editParticipant" method="post">
       <h1 class="h3 mb-3 font-weight-normal">Edit Participant</h1>
