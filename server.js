@@ -438,6 +438,49 @@ app.post("/toEditParticipants", function(req, res){
     res.render("editParticipant", {tourney: params});
 });
 
+app.get("/viewMatches", function(req, res){
+    
+    console.log("viewMatches");
+    var psql = "SELECT username, avatar, match_id FROM users INNER JOIN matches ON users.user_id = matches.comp_one OR users.user_id = matches.comp_two INNER JOIN tourneys ON tourneys.tourney_id = matches.tourney_id WHERE tourneys.tourney_id = " + tourneyID + "ORDER BY matches.match_id ASC";
+    console.log(psql);
+    pool.query(psql, function(err, users){
+        if (err) {
+            console.log("Error in query: ")
+            console.log(err);
+            res.render("error");
+        }
+        else {
+            var sql = "SELECT * FROM matches WHERE tourney_id = " + tourneyID;
+            pool.query(sql, function(err, matches){
+                if (err) {
+                    console.log("Error in query: ")
+                    console.log(err);
+                    res.render("error");
+                }
+                else {
+                    var params = [];
+                    var userCount = 0;
+                    for (var i = 0; i < matches.rowCount; i++){
+                        var obj = {
+                          compOne: users.rows[userCount].username,
+                          compOneIcon: users.rows[userCount].avatar,
+                          compTwo: users.rows[++userCount].username,
+                          compTwoIcon: users.rows[userCount].avatar,
+                          schedule: matches.rows[i].match_schedule,
+                          winner: matches.rows[1].winner,
+                          loser: matches.rows[1].loser
+                        };
+                        userCount++;
+                        params.push(obj);
+                    }
+                    console.log(params);
+                    res.render("viewMatches", {matches: params});
+                }
+            });
+        }
+    });
+});
+
 // Server Listening
 app.listen(port, function() {
     console.log("The server is on port 8080");

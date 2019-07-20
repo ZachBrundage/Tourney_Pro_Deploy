@@ -73,7 +73,7 @@ CREATE TABLE matches
 
 -- Create Match Query --
 INSERT INTO matches (tourney_id, comp_one, comp_two, match_schedule)
-VALUES (1, 1, 6, 'TODAY');
+VALUES (2, 8, 6, 'TODAY, ONLINE');
 
 -- Update Match Query --
 UPDATE matches
@@ -92,6 +92,17 @@ SELECT username, avatar FROM users
 INNER JOIN participants ON users.user_id = participants.user_id
 INNER JOIN tourneys ON tourneys.tourney_id = participants.tourney_id
 WHERE tourneys.tourney_id = 2;
+
+-- Usernames for each Match --
+SELECT username, avatar, match_id FROM users
+INNER JOIN matches ON users.user_id = matches.comp_one
+OR users.user_id = matches.comp_two
+INNER JOIN tourneys ON tourneys.tourney_id = matches.tourney_id
+WHERE tourneys.tourney_id = 2
+ORDER BY matches.match_id ASC;
+
+-- Match Details --
+SELECT * FROM matches WHERE tourney_id = 2;
 
 
 

@@ -25,7 +25,7 @@
             }
         </script>
     </head>
-    <body style="background-color: ">
+    <body>
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand" href="#">TOURNEY PRO</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -60,30 +60,31 @@
         </div>
         </nav>
         
-    <form action="/" method="post">
+            <% for(let i = 0; i < matches.length; i++) { %>
+                <form action="/" method="post">
                         <div class="list-group-item list-group-item-action flex-column align-items-start">
                         <div class="d-flex w-100">
-                            <img src="/public/Avatars/icons8-bear-48.png">
-                            <h5 class="mb-1" style="margin-top: 11px; margin-left: 15px">NAME vs NAME</h5>
-                            <img src="/public/Avatars/icons8-squirtle-48.png" style="margin-left: 15px">
+                            <img src="<%= matches[i].compOneIcon%>">
+                            <h5 class="mb-1" style="margin-top: 11px; margin-left: 15px"><%= matches[i].compOne%> vs <%= matches[i].compTwo%></h5>
+                            <img src="<%= matches[i].compTwoIcon%>" style="margin-left: 15px">
                         </div>
                         <div class="d-flex w-100">
-                            <p class="mb-1">Scheduled: </p>
+                            <p class="mb-1">Scheduled: <%= matches[i].schedule%></p>
                         </div>
                         <div class="d-flex w-100">
-                            <p class="mb-1">Winner: </p>
+                            <p class="mb-1">Winner: <%= matches[i].winner%></p>
                         </div>
                         <div class="d-flex w-100">
-                            <p class="mb-1">Loser: </p>
+                            <p class="mb-1">Loser: <%= matches[i].loser%></p>
                         </div>
         
                         <button type="submit" class="btn btn-primary  btn-block bg-dark">Edit</button>
                     </div>
                 </form>
-    <div>
+            <% } %>
+        
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    </div>
     </body>
 </html>
